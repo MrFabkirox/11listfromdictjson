@@ -1,0 +1,44 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html> <head>
+<title>Exemple avec JSON</title>
+</head>
+<body>
+<h1>Exemple avec JSON</h1>
+
+<script>
+
+function remplirListe(txt) {
+	var l= eval(txt); // DANGER !!!
+        var selector= document.getElementById("sel");
+        while ( selector.childNodes.length >= 1 ) {
+          selector.removeChild( selector.firstChild );       
+        } 
+	for (i in l) {
+		var opt= document.createElement("option");
+		var txt= document.createTextNode(l[i]);
+		opt.appendChild(txt);
+		selector.appendChild(opt);
+	}
+}
+
+function miseAjour() {
+	var txt= document.getElementById("filtre").value;
+	if (txt.length < 3) return;
+	var req= new XMLHttpRequest();
+	req.onreadystatechange= function () {
+           if (req.readyState == 4 && req.status==200) {
+              remplirListe(req.responseText);
+	   }
+	}
+        req.open("GET", "dico.php?"+ "debut="+encodeURIComponent(txt), true);
+        req.send(null);
+}
+</script>
+
+<input type="text" id="filtre" name="filtre" onkeyup="miseAjour();"/>
+<select id="sel" style="width:40em;">
+</select>
+
+</body>
+
+</html>
